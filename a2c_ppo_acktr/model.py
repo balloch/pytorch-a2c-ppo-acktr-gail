@@ -27,7 +27,7 @@ class Policy(nn.Module):
 
         self.base = base(obs_shape[0], **base_kwargs)
 
-        if action_space.__class__.__name__ == "Discrete":
+        if (action_space.__class__.__bases__[0].__name__ == "Discrete") or (action_space.__class__.__name__ == "Discrete"):
             num_outputs = action_space.n
             self.dist = Categorical(self.base.output_size, num_outputs)
         elif action_space.__class__.__name__ == "Box":
@@ -177,7 +177,8 @@ class CNNBase(NNBase):
             init_(nn.Conv2d(num_inputs, 32, 8, stride=4)), nn.ReLU(),
             init_(nn.Conv2d(32, 64, 4, stride=2)), nn.ReLU(),
             init_(nn.Conv2d(64, 32, 3, stride=1)), nn.ReLU(), Flatten(),
-            init_(nn.Linear(32 * 7 * 7, hidden_size)), nn.ReLU())
+            init_(nn.Linear(32 * 4 * 4, hidden_size)), nn.ReLU())
+            #init_(nn.Linear(32 * 7 * 7, hidden_size)), nn.ReLU())
 
         init_ = lambda m: init(m, nn.init.orthogonal_, lambda x: nn.init.
                                constant_(x, 0))
